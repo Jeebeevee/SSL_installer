@@ -31,10 +31,11 @@ e-mail:
 
 '''
 
-SSL_dir = '/etc/apache2/ssl/'
+#SSL_dir = '/etc/apache2/ssl/'
+SSL_dir = '/home/jelmer.bouma/ssl/' #test dir
 
 # make private key and csr
-def keyGen(domain, CLinput=''):
+def ManualKeyGen(domain, CLinput=''):
   if len(CLinput) > 2 and len(CLinput) <= 6:
     print(CLinput)
   else:
@@ -48,7 +49,14 @@ def keyGen(domain, CLinput=''):
     if not owner or not location or not country:
       print('Owner, Location or State is/are empty.\nStart again.')
       quit()
-    
+
+def MapMaking(domain):
+  if not os.path.isdir(SSL_dir + domain):
+    os.mkdir(SSL_dir + domain, 0664)
+    return true
+  else:
+    return true
+  
 
 # main function
 def main():
@@ -59,27 +67,23 @@ def main():
 
   if len(sys.argv) > 1 :
     # expressions in command line
-    domain = sys.argv[1] # domain as first variable
+    MapMaking(sys.argv[1])
+    
   else:
     # no expressions in command line, give menu
     print('== SSL installer ==')
     domain = raw_input('Domain: ')
-  
-  if not domain:
-    print('ERROR: No domain available.')
-    quit()
-  else:
-    if not os.path.isdir(SSL_dir + domain):
-      print('make ssl folder for the domain ' + domain + '.\n')
-      os.mkdir(SSL_dir + domain, 0664)
-
-  if not os.path.exists(SSL_dir + domain +'/'+ domain +'.key') and not os.path.exists(SSL_dir + domain +'/'+ domain +'.csr'):
-    # make private key and csr
-    print('make private key and csr.\n')
-    keyGen(domain, sys.argv)
-  else:
-    # private key and csr exist. go ahead with installing public key
-    print('installing public key.\n')
+    if not MapMaking(domain):
+      print('ERROR: Domain not available')
+      quit()
+    else:
+      if not os.path.exists(SSL_dir + domain +'/'+ domain +'.key') and not os.path.exists(SSL_dir + domain +'/'+ domain +'.csr'):
+        # make private key and csr
+        print('make private key and csr.\n')
+        ManualKeyGen(domain, sys.argv)
+      else:
+        # private key and csr exist. go ahead with installing public key
+        print('installing public key.\n')
 
 
 main()
