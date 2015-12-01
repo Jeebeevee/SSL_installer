@@ -31,8 +31,7 @@ e-mail:
 
 '''
 
-#SSL_dir = '/etc/apache2/ssl/'
-SSL_dir = '/home/jelmer.bouma/ssl/' #test dir
+SSL_dir = '/etc/apache2/ssl/'
 
 # make private key and csr
 def keyGen(domain, CLinput=''):
